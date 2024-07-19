@@ -1,28 +1,32 @@
+// In your `RegisterForm.js`
+
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3001/api/register', {
+      const response = await axios.post('http://localhost:3001/register', {
         name,
         dateOfBirth,
         email,
         password,
       });
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      window.location.href = '/protected';
+      console.log(response.data);
+      if (response.data.message === 'User registered successfully') {
+        navigate('/login'); // Redirect to login page after successful registration
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error during registration:', error);
     }
   };
 
@@ -40,7 +44,6 @@ const RegisterForm = () => {
                   placeholder="Enter your name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  style={{ height: '40px', padding: '10px', fontSize: '16px', border: '1px solid #ccc', borderRadius: '5px' }}
                   required
                 />
               </Form.Group>
@@ -50,7 +53,6 @@ const RegisterForm = () => {
                   type="date"
                   value={dateOfBirth}
                   onChange={(e) => setDateOfBirth(e.target.value)}
-                  style={{ height: '40px', padding: '10px', fontSize: '16px', border: '1px solid #ccc', borderRadius: '5px' }}
                   required
                 />
               </Form.Group>
@@ -61,7 +63,6 @@ const RegisterForm = () => {
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{ height: '40px', padding: '10px', fontSize: '16px', border: '1px solid #ccc', borderRadius: '5px' }}
                   required
                 />
               </Form.Group>
@@ -72,7 +73,6 @@ const RegisterForm = () => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  style={{ height: '40px', padding: '10px', fontSize: '16px', border: '1px solid #ccc', borderRadius: '5px' }}
                   required
                 />
               </Form.Group>
@@ -83,6 +83,14 @@ const RegisterForm = () => {
                 style={{ backgroundColor: '#337ab7', border: 'none', padding: '10px 20px', borderRadius: '5px', fontSize: '16px', cursor: 'pointer' }}
               >
                 Register
+              </Button>
+              <Button
+                variant="link"
+                onClick={() => navigate('/login')}
+                className="w-100 mt-2"
+                style={{ fontSize: '16px' }}
+              >
+                Already have an account? Login
               </Button>
             </Form>
           </div>

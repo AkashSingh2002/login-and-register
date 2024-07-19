@@ -1,8 +1,12 @@
 import React from 'react';
-import { Table, Container, Row, Col  } from 'react-bootstrap';
+import { Table, Container, Row, Col } from 'react-bootstrap';
 
 const ProtectedPage = () => {
   const user = JSON.parse(localStorage.getItem('user'));
+
+  if (!user) {
+    return <div>No user data found. Please log in.</div>;
+  }
 
   return (
     <Container>

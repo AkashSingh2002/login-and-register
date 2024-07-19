@@ -1,24 +1,30 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Simulate form submission (replace with your backend logic)
-    const response = await axios.post('http://localhost:3001/api/login', {
-      username,
-      password,
-    });
-
-    const { token, user } = response.data;
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    window.location.href = '/protected';
+    try {
+      const response = await axios.post('http://localhost:3001/login', {
+        email,
+        password,
+      });
+      console.log('Server response:', response.data);
+      if (response.data === "success") {
+        navigate('/protected');
+      } else {
+        console.error('Login failed:', response.data);
+        // You can add more user-friendly error handling here
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
   };
 
   return (
@@ -28,13 +34,13 @@ const LoginForm = () => {
           <div className="p-4 bg-white rounded shadow-sm">
             <h1 className="text-center mb-4">Sign In</h1>
             <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="username" className="mb-3">
-                <Form.Label>Username</Form.Label>
+              <Form.Group controlId="email" className="mb-3">
+                <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter your username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Form.Group>

@@ -1,3 +1,5 @@
+// In `models/user.js`
+
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -7,6 +9,6 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
 });
 
-const User = mongoose.model('User', userSchema);
+const UserModel = mongoose.model('User', userSchema); // Make sure 'User' is capitalized
 
-export default User;
+module.exports = UserModel;
